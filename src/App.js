@@ -1,23 +1,72 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { useState, useEffect } from 'react';
 import './App.css';
+import { getAllPokemons, customCall } from './services/fetchPokemon'
+import { renderPage, getUrlParameter } from './helpers/pagination'
 
 function App() {
+  const [Pokemons, setPokemons] = useState([])
+  const [Count, setCount] = useState(0)
+  const [Next, setNext] = useState('')
+  const [Previous, setPrevious] = useState('')
+  const [ActualPage, setActualPage] = useState(1)
+  const [Pages, setPages] = useState(1)
+
+  useEffect(() => {
+    getAllPokemons()
+    .then(({results, count, next, previous}) => {
+      setPokemons(results)
+      setCount(count)
+      setNext(next)
+      setPrevious(previous)
+      setPages(Math.round(count / 20))
+    })
+  }, [])
+
+  useEffect(() => {
+    const offset = getUrlParameter('offset', Next)
+    const limit = getUrlParameter('limit', Next)
+
+    setActualPage(offset / limit)
+  }, [Next, Previous])
+
+  const changePage = (Page) => {
+    renderPage(Page)
+      .then(({results, count, next, previous}) => {
+        setPokemons(results)
+        setCount(count)
+        setNext(next)
+        setPrevious(previous)
+      })
+  }
+
   return (
     <div className="App">
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+        <ul>
+          {
+            Pokemons.map(({name, url}) => (
+              <li key={name}>
+                <a href={url}>{name}</a>
+              </li>
+            ))
+          }
+        </ul>
+        
+        { Next !== null && 
+          <button onClick={() => changePage(Next)}>
+            Next
+          </button> 
+        }
+
+        { Previous !== null && 
+          <button onClick={() => changePage(Previous)}>
+            Previous
+          </button> 
+        } 
+
+        <p>Page { ActualPage } from { Pages }</p>
+        <p>Number of pokemons: { Count }</p>
+
       </header>
     </div>
   );
