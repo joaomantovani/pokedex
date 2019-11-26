@@ -12,7 +12,12 @@ async function apiCall(params = '', filters = '') {
 
   const url = `${POKEMON_API}/${urlParams}/${urlFilters}`.replace(/\/\//g, '/')
 
-  const response = await fetch(url)
+  const response = await fetch(url, {
+    headers : { 
+      'Content-Type': 'application/json',
+      'Accept': 'application/json'
+     }
+  })
 
   return await response.json()
 }
@@ -35,7 +40,13 @@ export const getAllPokemons = (filters = '') => apiCall('pokemon', filters)
  * @param {string} url Complete URL to be called using fetch
  */
 export const customCall = async (url) => {
-  const response = await fetch(url)
+  const response = await fetch(url, {
+    headers : { 
+      'Content-Type': 'application/json',
+      'Accept': 'application/json'
+     }
+
+  })
 
   return await response.json()
 }
