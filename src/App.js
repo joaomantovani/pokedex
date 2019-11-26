@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
-import { getAllPokemons, customCall } from './services/fetchPokemon'
+import { getAllPokemons } from './services/fetchPokemon'
 import { renderPage, getUrlParameter } from './helpers/pagination'
 
 function App() {
@@ -23,8 +23,8 @@ function App() {
   }, [])
 
   useEffect(() => {
-    const offset = getUrlParameter('offset', Next)
-    const limit = getUrlParameter('limit', Next)
+    const offset = getUrlParameter('offset', Next) || 1
+    const limit = getUrlParameter('limit', Next) || 1
 
     setActualPage(offset / limit)
   }, [Next, Previous])
@@ -41,7 +41,6 @@ function App() {
 
   return (
     <div className="App">
-      <h4>CI working. V2</h4>
       <header className="App-header">
         <ul>
           {
