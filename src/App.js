@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
-import { getAllPokemons } from './services/fetchPokemon'
+import { getAllPokemonsWithData, getAllPokemons } from './services/fetchPokemon'
 import { renderPage, getUrlParameter } from './helpers/pagination'
+import Card from './components/Card'
 
 function App() {
   const [Pokemons, setPokemons] = useState([])
@@ -41,16 +42,16 @@ function App() {
 
   return (
     <div className="App">
+      <h1>CI funcionando</h1>
       <header className="App-header">
-        <ul>
-          {
-            Pokemons.map(({name, url}) => (
-              <li key={name}>
-                <a href={url}>{name}</a>
-              </li>
-            ))
-          }
-        </ul>
+        {
+          Pokemons.map(({name, url}, index) => (
+            <Card key={name}
+              description={"I'm a pokemon"} 
+              title={name}>
+            </Card>
+          ))
+        }
         
         { Next !== null && 
           <button onClick={() => changePage(Next)}>
